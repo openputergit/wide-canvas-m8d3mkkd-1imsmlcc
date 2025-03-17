@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Planning & Net Worth Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+        @media (max-width: 640px) {
+            .mobile-full {
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8 text-blue-600">Financial Planner & Net Worth Calculator</h1>
+        
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-lg font-semibold text-gray-700">Net Worth</h2>
+                <p class="text-2xl font-bold text-green-600" id="netWorthDisplay">$0</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-lg font-semibold text-gray-700">Total Assets</h2>
+                <p class="text-2xl font-bold text-blue-600" id="totalAssetsDisplay">$0</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-lg font-semibold text-gray-700">Total Liabilities</h2>
+                <p class="text-2xl font-bold text-red-600" id="totalLiabilitiesDisplay">$0</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-lg font-semibold text-gray-700">Monthly Cash Flow</h2>
+                <p class="text-2xl font-bold text-purple-600" id="cashFlowDisplay">$0</p>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Left Column -->
+            <div class="space-y-8">
+                <!-- Income Section -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="bi bi-cash me-2"></i>Income
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="flex gap-2">
+                            <input type="text" id="incomeName" placeholder="Income Source" class="flex-1 p-2 border rounded">
+                            <input type="number" id="incomeAmount" placeholder="Amount" class="w-32 p-2 border rounded">
+                            <button onclick="addIncome()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                        <div id="incomeList" class="space-y-2 custom-scrollbar max-h-40 overflow-y-auto"></div>
+                    </div>
+                </div>
+
+                <!-- Expenses Section -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="bi bi-credit-card me-2"></i>Expenses
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="flex gap-2">
+                            <input type="text" id="expenseName" placeholder="Expense Name" class="flex-1 p-2 border rounded">
+                            <input type="number" id="expenseAmount" placeholder="Amount" class="w-32 p-2 border rounded">
+                            <button onclick="addExpense()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                        <div id="expenseList" class="space-y-2 custom-scrollbar max-h-40 overflow-y-auto"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-8">
+                <!-- Assets Section -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="bi bi-briefcase me-2"></i>Assets
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="flex gap-2">
+                            <input type="text" id="assetName" placeholder="Asset Name" class="flex-1 p-2 border rounded">
+                            <input type="number" id="assetValue" placeholder="Value" class="w-32 p-2 border rounded">
+                            <button onclick="addAsset()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                        <div id="assetList" class="space-y-2 custom-scrollbar max-h-40 overflow-y-auto"></div>
+                    </div>
+                </div>
+
+                <!-- Liabilities Section -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Liabilities
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="flex gap-2">
+                            <input type="text" id="liabilityName" placeholder="Liability Name" class="flex-1 p-2 border rounded">
+                            <input type="number" id="liabilityAmount" placeholder="Amount" class="w-32 p-2 border rounded">
+                            <button onclick="addLiability()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                        <div id="liabilityList" class="space-y-2 custom-scrollbar max-h-40 overflow-y-auto"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let incomes = [];
+        let expenses = [];
+        let assets = [];
+        let liabilities = [];
+
+        function updateDisplays() {
+            const totalIncome = incomes.reduce((sum, item) => sum + item.amount, 0);
+            const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
+            const totalAssets = assets.reduce((sum, item) => sum + item.amount, 0);
+            const totalLiabilities = liabilities.reduce((sum, item) => sum + item.amount, 0);
+            
+            document.getElementById('netWorthDisplay').textContent = `$${(totalAssets - totalLiabilities).toLocaleString()}`;
+            document.getElementById('totalAssetsDisplay').textContent = `$${totalAssets.toLocaleString()}`;
+            document.getElementById('totalLiabilitiesDisplay').textContent = `$${totalLiabilities.toLocaleString()}`;
+            document.getElementById('cashFlowDisplay').textContent = `$${(totalIncome - totalExpenses).toLocaleString()}`;
+        }
+
+        function createListItem(item, index, deleteFunction) {
+            return `
+                <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <span>${item.name}</span>
+                    <div class="flex items-center gap-2">
+                        <span>$${item.amount.toLocaleString()}</span>
+                        <button onclick="${deleteFunction}(${index})" class="text-red-500 hover:text-red-700">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addIncome() {
+            const name = document.getElementById('incomeName').value;
+            const amount = parseFloat(document.getElementById('incomeAmount').value);
+            if (name && amount) {
+                incomes.push({ name, amount });
+                document.getElementById('incomeList').innerHTML = incomes.map((income, index) => 
+                    createListItem(income, index, 'deleteIncome')
+                ).join('');
+                document.getElementById('incomeName').value = '';
+                document.getElementById('incomeAmount').value = '';
+                updateDisplays();
+            }
+        }
+
+        function deleteIncome(index) {
+            incomes.splice(index, 1);
+            document.getElementById('incomeList').innerHTML = incomes.map((income, index) => 
+                createListItem(income, index, 'deleteIncome')
+            ).join('');
+            updateDisplays();
+        }
+
+        function addExpense() {
+            const name = document.getElementById('expenseName').value;
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
+            if (name && amount) {
+                expenses.push({ name, amount });
+                document.getElementById('expenseList').innerHTML = expenses.map((expense, index) => 
+                    createListItem(expense, index, 'deleteExpense')
+                ).join('');
+                document.getElementById('expenseName').value = '';
+                document.getElementById('expenseAmount').value = '';
+                updateDisplays();
+            }
+        }
+
+        function deleteExpense(index) {
+            expenses.splice(index, 1);
+            document.getElementById('expenseList').innerHTML = expenses.map((expense, index) => 
+                createListItem(expense, index, 'deleteExpense')
+            ).join('');
+            updateDisplays();
+        }
+
+        function addAsset() {
+            const name = document.getElementById('assetName').value;
+            const amount = parseFloat(document.getElementById('assetValue').value);
+            if (name && amount) {
+                assets.push({ name, amount });
+                document.getElementById('assetList').innerHTML = assets.map((asset, index) => 
+                    createListItem(asset, index, 'deleteAsset')
+                ).join('');
+                document.getElementById('assetName').value = '';
+                document.getElementById('assetValue').value = '';
+                updateDisplays();
+            }
+        }
+
+        function deleteAsset(index) {
+            assets.splice(index, 1);
+            document.getElementById('assetList').innerHTML = assets.map((asset, index) => 
+                createListItem(asset, index, 'deleteAsset')
+            ).join('');
+            updateDisplays();
+        }
+
+        function addLiability() {
+            const name = document.getElementById('liabilityName').value;
+            const amount = parseFloat(document.getElementById('liabilityAmount').value);
+            if (name && amount) {
+                liabilities.push({ name, amount });
+                document.getElementById('liabilityList').innerHTML = liabilities.map((liability, index) => 
+                    createListItem(liability, index, 'deleteLiability')
+                ).join('');
+                document.getElementById('liabilityName').value = '';
+                document.getElementById('liabilityAmount').value = '';
+                updateDisplays();
+            }
+        }
+
+        function deleteLiability(index) {
+            liabilities.splice(index, 1);
+            document.getElementById('liabilityList').innerHTML = liabilities.map((liability, index) => 
+                createListItem(liability, index, 'deleteLiability')
+            ).join('');
+            updateDisplays();
+        }
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
